@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     static int DIGITAL_OUTPUT_PIN = 6;
-    public static void main(String args) {
+    public static void main(String[] args) {
         Context pi4j = Pi4J.newAutoContext();
 
         // create a digital output instance using the default digital output provider
