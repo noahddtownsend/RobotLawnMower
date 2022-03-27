@@ -1,7 +1,6 @@
 import com.pi4j.Pi4J;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
-import com.pi4j.io.gpio.digital.DigitalOutputProvider;
 import com.pi4j.io.gpio.digital.DigitalState;
 
 import java.util.concurrent.TimeUnit;
@@ -10,6 +9,8 @@ public class Main {
     static int DIGITAL_OUTPUT_PIN = 6;
     public static void main(String[] args) {
         Context pi4j = Pi4J.newAutoContext();
+        System.out.println("Hi there!");
+
 
         // create a digital output instance using the default digital output provider
         DigitalOutput output = pi4j.dout().create(DIGITAL_OUTPUT_PIN);
@@ -41,6 +42,7 @@ public class Main {
         System.out.println("PULSING OUTPUT STATE TO HIGH FOR 3 SECONDS");
         output.pulse(3, TimeUnit.SECONDS, DigitalState.HIGH);
         System.out.println("PULSING OUTPUT STATE COMPLETE");
+
 
 // shutdown Pi4J
         pi4j.shutdown();
