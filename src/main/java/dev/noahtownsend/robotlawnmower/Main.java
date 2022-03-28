@@ -8,7 +8,7 @@ import com.pi4j.io.gpio.digital.DigitalState;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-    private static int DIGITAL_OUTPUT_PIN = 2;
+    private static int DIGITAL_OUTPUT_PIN = 4;
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Hello world");
