@@ -17,13 +17,13 @@ public class Main {
 
         // create a digital output instance using the default digital output provider
         DigitalOutput output = pi4j.dout().create(DIGITAL_OUTPUT_PIN);
-        output.config().shutdownState(DigitalState.LOW);
+        output.config().shutdownState(DigitalState.HIGH);
 
 // setup a digital output listener to listen for any state changes on the digital output
         output.addListener(System.out::println);
 
 // lets invoke some changes on the digital output
-        output.state(DigitalState.HIGH);
+        output.state(DigitalState.LOW);
         Thread.sleep(5000);
 
 // lets read the digital output state
