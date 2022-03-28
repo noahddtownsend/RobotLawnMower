@@ -19,7 +19,7 @@ public class Main {
 
         // create a digital output instance using the default digital output provider
         DigitalOutput output = pi4j.dout().create(DIGITAL_OUTPUT_PIN);
-        output.config().shutdownState(DigitalState.HIGH);
+        output.config().shutdownState(DigitalState.LOW);
 
 // setup a digital output listener to listen for any state changes on the digital output
         output.addListener(System.out::println);
