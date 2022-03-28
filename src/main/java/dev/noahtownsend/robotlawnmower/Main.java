@@ -5,8 +5,6 @@ import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 
-import java.util.concurrent.TimeUnit;
-
 public class Main {
     private static int DIGITAL_OUTPUT_PIN = 4;
 
@@ -25,8 +23,8 @@ public class Main {
         output.addListener(System.out::println);
 
 // lets invoke some changes on the digital output
-        output.state(DigitalState.HIGH)
-                .state(DigitalState.LOW);
+        output.state(DigitalState.HIGH);
+        Thread.sleep(5000);
 
 // lets read the digital output state
         System.out.print("CURRENT DIGITAL OUTPUT [" + output + "] STATE IS [");
