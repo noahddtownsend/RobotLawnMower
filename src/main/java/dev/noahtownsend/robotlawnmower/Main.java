@@ -1,52 +1,55 @@
 package dev.noahtownsend.robotlawnmower;
 
-import com.pi4j.io.gpio.*;
+import com.pi4j.Pi4J;
+import com.pi4j.context.Context;
+import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalState;
+
+import java.util.concurrent.TimeUnit;
 
 public class Main {
+    private static int DIGITAL_OUTPUT_PIN = 2;
+
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Hello world");
 
-        System.out.println("<--Pi4J--> GPIO Control Example ... started.");
+        Context pi4j = Pi4J.newAutoContext();
+        System.out.println("Hi there!");
 
-        // create gpio controller
-        final GpioController gpio = GpioFactory.getInstance();
 
-        // provision gpio pin #01 as an output pin and turn on
-        final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "MyLED", PinState.HIGH);
+        // create a digital output instance using the default digital output provider
+        DigitalOutput output = pi4j.dout().create(DIGITAL_OUTPUT_PIN);
+        output.config().shutdownState(DigitalState.HIGH);
 
-        // set shutdown state for this pin
-        pin.setShutdownOptions(true, PinState.LOW);
+// setup a digital output listener to listen for any state changes on the digital output
+        output.addListener(System.out::println);
 
-        System.out.println("--> GPIO state should be: ON");
+// lets invoke some changes on the digital output
+        output.state(DigitalState.HIGH)
+                .state(DigitalState.LOW)
+                .state(DigitalState.HIGH)
+                .state(DigitalState.LOW);
 
-        Thread.sleep(5000);
+// lets toggle the digital output state a few times
+        output.toggle()
+                .toggle()
+                .toggle();
 
-        // turn off gpio pin #01
-        pin.low();
-        System.out.println("--> GPIO state should be: OFF");
+// another friendly method of setting output state
+        output.high()
+                .low();
 
-        Thread.sleep(5000);
+// lets read the digital output state
+        System.out.print("CURRENT DIGITAL OUTPUT [" + output + "] STATE IS [");
+        System.out.println(output.state() + "]");
 
-        // toggle the current state of gpio pin #01 (should turn on)
-        pin.toggle();
-        System.out.println("--> GPIO state should be: ON");
+// pulse to HIGH state for 3 seconds
+        System.out.println("PULSING OUTPUT STATE TO HIGH FOR 3 SECONDS");
+        output.pulse(3, TimeUnit.SECONDS, DigitalState.HIGH);
+        System.out.println("PULSING OUTPUT STATE COMPLETE");
 
-        Thread.sleep(5000);
 
-        // toggle the current state of gpio pin #01  (should turn off)
-        pin.toggle();
-        System.out.println("--> GPIO state should be: OFF");
-
-        Thread.sleep(5000);
-
-        // turn on gpio pin #01 for 1 second and then off
-        System.out.println("--> GPIO state should be: ON for only 1 second");
-        pin.pulse(1000, true); // set second argument to 'true' use a blocking call
-
-        // stop all GPIO activity/threads by shutting down the GPIO controller
-        // (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
-        gpio.shutdown();
-
-        System.out.println("Exiting ControlGpioExample");
+// shutdown Pi4J
+        pi4j.shutdown();
     }
 }
