@@ -11,18 +11,18 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Hello world");
 
+        for (int i = 0; i < 40; ++i) {
+            blink(i);
+        }
+    }
+
+    public static void blink(int ledNum) throws InterruptedException {
         Context pi4j = Pi4J.newAutoContext();
         System.out.println("Hi there!");
 
 
         // create a digital output instance using the default digital output provider
-        DigitalOutput output = pi4j.create(DigitalOutput
-                .newConfigBuilder(pi4j)
-                .id("led")
-                .name("LED")
-                .shutdown(DigitalState.HIGH)
-                .initial(DigitalState.HIGH)
-                .provider("pigpio-digital-output"));
+        DigitalOutput output = pi4j.dout().create(ledNum);
         output.config().shutdownState(DigitalState.HIGH);
 
 // setup a digital output listener to listen for any state changes on the digital output
