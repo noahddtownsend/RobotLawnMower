@@ -6,14 +6,12 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 
 public class Main {
-    private static int DIGITAL_OUTPUT_PIN = 3;
+    private static int DIGITAL_OUTPUT_PIN = 8;
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Hello world");
 
-        for (int i = 0; i < 40; ++i) {
-            blink(i);
-        }
+        blink(DIGITAL_OUTPUT_PIN);
     }
 
     public static void blink(int ledNum) throws InterruptedException {
@@ -30,9 +28,9 @@ public class Main {
 
 // lets invoke some changes on the digital output
         output.state(DigitalState.LOW);
-//        Thread.sleep(5000);
+        Thread.sleep(5000);
         output.state(DigitalState.HIGH);
-//        Thread.sleep(5000);
+        Thread.sleep(5000);
 
 // lets read the digital output state
         System.out.print("CURRENT DIGITAL OUTPUT [" + output + "] STATE IS [");
