@@ -20,7 +20,6 @@ public class Main {
                 .newConfigBuilder(pi4j)
                 .id("led")
                 .name("LED")
-                        .address(DIGITAL_OUTPUT_PIN)
                 .shutdown(DigitalState.HIGH)
                 .initial(DigitalState.HIGH)
                 .provider("pigpio-digital-output"));
