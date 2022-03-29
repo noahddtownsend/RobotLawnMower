@@ -30,9 +30,9 @@ public class Main {
 
 // lets invoke some changes on the digital output
         output.state(DigitalState.LOW);
-        Thread.sleep(5000);
+//        Thread.sleep(5000);
         output.state(DigitalState.HIGH);
-        Thread.sleep(5000);
+//        Thread.sleep(5000);
 
 // lets read the digital output state
         System.out.print("CURRENT DIGITAL OUTPUT [" + output + "] STATE IS [");
