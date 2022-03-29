@@ -20,16 +20,21 @@ public class Main {
 
 
         // create a digital output instance using the default digital output provider
-        DigitalOutput output = pi4j.dout().create(ledNum);
-        output.config().shutdownState(DigitalState.HIGH);
+        DigitalOutput output = pi4j.create(DigitalOutput.newConfigBuilder(pi4j)
+                .id("led")
+                .name("LED Flasher")
+                .address(ledNum)
+                .shutdown(DigitalState.LOW)
+                .initial(DigitalState.LOW)
+                .provider("pigpio-digital-output"));
 
 // setup a digital output listener to listen for any state changes on the digital output
         output.addListener(System.out::println);
 
 // lets invoke some changes on the digital output
-        output.state(DigitalState.LOW);
+        output.low();
         Thread.sleep(5000);
-        output.state(DigitalState.HIGH);
+        output.high();
         Thread.sleep(5000);
 
 // lets read the digital output state
