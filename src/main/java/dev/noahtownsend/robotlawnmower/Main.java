@@ -67,6 +67,8 @@ public class Main {
                 .provider("pigpio-digital-output");
         var led = pi4j.create(ledConfig);
 
+        GpsService gpsService = new GpsService(pi4j);
+        gpsService.init();
 
         while (pressCount < 5) {
             ++pressCount;
@@ -79,7 +81,7 @@ public class Main {
                 console.println("LED high");
                 led.high();
             }
-            Thread.sleep(500 / (pressCount + 1));
+            Thread.sleep(5000);
         }
 
         // ------------------------------------------------------------
