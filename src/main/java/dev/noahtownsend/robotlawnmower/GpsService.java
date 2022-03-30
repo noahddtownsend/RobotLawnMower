@@ -7,7 +7,7 @@ import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.StopBits;
 
 public class GpsService {
-    private static final String SERIAL_ADDRESS = "$GPGGA";
+    private static final String SERIAL_ADDRESS = "/dev/ttyS0";
 
     private Context pi4j;
 
@@ -30,9 +30,8 @@ public class GpsService {
 
         while (!serial.isOpen()) {
             Thread.sleep(250);
+            System.out.println("Waiting for serial to open...");
         }
-
-
 
         SerialReader serialReader = new SerialReader(serial);
         Thread serialReaderThread = new Thread(serialReader, "SerialReader");
