@@ -71,9 +71,11 @@ public class Main {
         while (pressCount < 5) {
             ++pressCount;
             if (led.equals(DigitalState.HIGH)) {
+                System.out.println("LED low");
                 console.println("LED low");
                 led.low();
             } else {
+                System.out.println("LED high");
                 console.println("LED high");
                 led.high();
             }
