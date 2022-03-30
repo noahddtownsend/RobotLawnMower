@@ -6,7 +6,7 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 
 public class Main {
-    private static int DIGITAL_OUTPUT_PIN = 26;
+    private static int DIGITAL_OUTPUT_PIN = 22;
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Hello world");
