@@ -60,7 +60,16 @@ public class DistanceSensor {
             trigger.low();
 
             echo.addListener(digitalStateChangeEvent -> {
+                System.out.println("Received event");
                 if (digitalStateChangeEvent.state().equals(1)) {
+                    double distanceInCm = (System.currentTimeMillis() - start) * SPEED_OF_SOUND / 2.0;
+
+                    if (distanceInCm < 0) {
+                        distanceInCm = Double.MAX_VALUE;
+                    }
+
+                    emitter.onSuccess(distanceInCm);
+                } else {
                     double distanceInCm = (System.currentTimeMillis() - start) * SPEED_OF_SOUND / 2.0;
 
                     if (distanceInCm < 0) {
