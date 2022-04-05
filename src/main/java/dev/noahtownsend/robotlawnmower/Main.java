@@ -52,22 +52,27 @@ public class Main {
         // method will automatically load all available Pi4J
         // extensions found in the application's classpath which
         // may include 'Platforms' and 'I/O Providers'
-        var pi4j = Pi4J.newAutoContext();
+        var context = Pi4J.newAutoContext();
 
         // Here we will create I/O interfaces for a (GPIO) digital output
         // and input pin. We define the 'provider' to use PiGpio to control
         // the GPIO.
-        var ledConfig = DigitalOutput.newConfigBuilder(pi4j)
+        var ledConfig = DigitalOutput.newConfigBuilder(context)
                 .id("led")
                 .name("LED Flasher")
                 .address(PIN_LED)
                 .shutdown(DigitalState.LOW)
                 .initial(DigitalState.LOW)
                 .provider("pigpio-digital-output");
-        var led = pi4j.create(ledConfig);
+        var led = context.create(ledConfig);
 
-        GpsService gpsService = new GpsService(pi4j);
-        gpsService.init();
+//        GpsService gpsService = new GpsService(pi4j);
+//        gpsService.init();
+
+        DistanceSensor distanceSensor = new DistanceSensor(context);
+        distanceSensor.measure().subscribe(distanceInCm -> {
+            System.out.println("Distance: " + distanceInCm);
+        });
 
         while (pressCount < 5) {
             ++pressCount;
@@ -95,6 +100,6 @@ public class Main {
         // is returned to the system.
 
         // Shutdown Pi4J
-        pi4j.shutdown();
+        context.shutdown();
     }
 }
