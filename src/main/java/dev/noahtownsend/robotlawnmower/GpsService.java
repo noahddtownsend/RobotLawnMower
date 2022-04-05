@@ -57,7 +57,7 @@ public class GpsService {
 
     private static double nmeaToDecimal(double value, boolean isSouthOrWest) {
         double minutes = (value / 10) % 10 * 10;
-        double days = value - minutes;
+        double days = (value - minutes) / 100;
         double degrees = days + minutes / 60;
         if (isSouthOrWest) {
             degrees *= -1;

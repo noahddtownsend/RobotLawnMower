@@ -30,11 +30,11 @@ public class SerialReader implements Runnable {
     @Override
     public void run() {
         BufferedReader br = new BufferedReader(new InputStreamReader(serial.getInputStream()));
+        
+        StringBuilder line = new StringBuilder();
 
-        try {
-            StringBuilder line = new StringBuilder();
-
-            while (continueReading) {
+        while (continueReading) {
+            try {
                 var available = serial.available();
                 if (available > 0) {
                     for (int i = 0; i < available; i++) {
@@ -52,10 +52,11 @@ public class SerialReader implements Runnable {
                 } else {
                     Thread.sleep(10);
                 }
+            } catch (Exception e) {
+                System.out.println("Error reading data from serial: " + e.getMessage());
+                System.out.println(e.getStackTrace());
             }
-        } catch (Exception e) {
-            System.out.println("Error reading data from serial: " + e.getMessage());
-            System.out.println(e.getStackTrace());
         }
+
     }
 }
