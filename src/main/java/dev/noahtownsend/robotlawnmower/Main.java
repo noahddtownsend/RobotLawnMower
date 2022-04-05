@@ -5,6 +5,8 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.Console;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Main {
     private static final int PIN_BUTTON = 24; // PIN 18 = BCM 24
     private static final int PIN_LED = 22; // PIN 15 = BCM 22
@@ -69,9 +71,11 @@ public class Main {
 //        GpsService gpsService = new GpsService(pi4j);
 //        gpsService.init();
 
+        AtomicBoolean gotDistance = new AtomicBoolean(false);
         DistanceSensor distanceSensor = new DistanceSensor(context);
         distanceSensor.measure().subscribe(distanceInCm -> {
             System.out.println("Distance: " + distanceInCm);
+            gotDistance.set(true);
         });
 
         while (pressCount < 5) {
@@ -86,6 +90,10 @@ public class Main {
                 led.high();
             }
             Thread.sleep(5000);
+        }
+
+        while (!gotDistance.get()) {
+
         }
 
         // ------------------------------------------------------------

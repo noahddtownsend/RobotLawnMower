@@ -51,7 +51,7 @@ public class DistanceSensor {
 
     /**
      *
-     * @return Single that emits measured distance in CM
+     * @return Single that emits measured distance in CM. If distance in CM is greater than Double.MAX_VALUE, Double.MAX_VALUE is emitted
      */
     public Single<Double> measure() {
         return Single.create(emitter -> {
@@ -62,6 +62,11 @@ public class DistanceSensor {
             echo.addListener(digitalStateChangeEvent -> {
                 if (digitalStateChangeEvent.state().equals(1)) {
                     double distanceInCm = (System.currentTimeMillis() - start) * SPEED_OF_SOUND / 2.0;
+
+                    if (distanceInCm < 0) {
+                        distanceInCm = Double.MAX_VALUE;
+                    }
+
                     emitter.onSuccess(distanceInCm);
                 }
             });
