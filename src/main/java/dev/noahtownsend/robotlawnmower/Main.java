@@ -1,7 +1,6 @@
 package dev.noahtownsend.robotlawnmower;
 
 import com.pi4j.Pi4J;
-import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.Console;
@@ -53,7 +52,6 @@ public class Main {
         // method will automatically load all available Pi4J
         // extensions found in the application's classpath which
         // may include 'Platforms' and 'I/O Providers'
-        KotlinTest.Companion.hello();
         var pi4j = Pi4J.newAutoContext();
 
         // Here we will create I/O interfaces for a (GPIO) digital output
