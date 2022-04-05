@@ -31,7 +31,7 @@ public class DistanceSensor {
     private void init() {
         trigger = context.create(
                 DigitalOutput.newConfigBuilder(context)
-                        .id("led")
+                        .id("sonic-dist-trigger")
                         .name("sonic-dist-trigger")
                         .address(TRIGGER_PIN)
                         .shutdown(DigitalState.LOW)
@@ -41,7 +41,7 @@ public class DistanceSensor {
 
         echo = context.create(
                 DigitalInput.newConfigBuilder(context)
-                        .id("led")
+                        .id("sonic-dist-echo")
                         .name("sonic-dist-echo")
                         .address(TRIGGER_PIN)
                         .pull(PullResistance.PULL_UP)
