@@ -34,6 +34,16 @@ public class GpsService {
         }
 
         SerialReader serialReader = new SerialReader(serial);
+        serialReader.getData().subscribe(data -> {
+            if (data.startsWith("$GPGLL,")) {
+                String[] parts = data.split(",");
+                double north = nmeaToDecimal(Double.parseDouble(parts[1]), false);
+                double west = nmeaToDecimal(Double.parseDouble(parts[3]), true);
+
+                System.out.println(north + "N, " + west + "W");
+            }
+        });
+
         Thread serialReaderThread = new Thread(serialReader, "SerialReader");
         serialReaderThread.setDaemon(true);
         serialReaderThread.start();
@@ -43,6 +53,17 @@ public class GpsService {
         }
 
         serialReader.stopReading();
+    }
+
+    private static double nmeaToDecimal(double value, boolean isSouthOrWest) {
+        double minutes = (value / 10) % 10 * 10;
+        double days = value - minutes;
+        double degrees = days + minutes / 60;
+        if (isSouthOrWest) {
+            degrees *= -1;
+        }
+
+        return degrees;
     }
 
 }

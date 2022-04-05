@@ -1,6 +1,8 @@
 package dev.noahtownsend.robotlawnmower;
 
 import com.pi4j.io.serial.Serial;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,35 +18,35 @@ public class SerialReader implements Runnable {
 
     public void stopReading() {
         continueReading = false;
+        publishSubject.onComplete();
+    }
+
+    private final PublishSubject<String> publishSubject = PublishSubject.create();
+
+    public Observable<String> getData() {
+        return Observable.wrap(publishSubject);
     }
 
     @Override
     public void run() {
-        // We use a buffered reader to handle the data received from the serial port
         BufferedReader br = new BufferedReader(new InputStreamReader(serial.getInputStream()));
 
         try {
-            // Data from the GPS is recieved in lines
-            String line = "";
+            StringBuilder line = new StringBuilder();
 
-            // Read data until the flag is false
             while (continueReading) {
-                // First we need to check if there is data available to read.
-                // The read() command for pigio-serial is a NON-BLOCKING call,
-                // in contrast to typical java input streams.
                 var available = serial.available();
                 if (available > 0) {
                     for (int i = 0; i < available; i++) {
                         byte b = (byte) br.read();
                         if (b < 32) {
-                            // All non-string bytes are handled as line breaks
-                            if (!line.isEmpty()) {
-                                // Here we should add code to parse the data to a GPS data object
-                                System.out.println("Data: '" + line + "'");
-                                line = "";
+                            // All non-printable/whitespace chars treated as EOL
+                            if (line.length() > 0) {
+                                publishSubject.onNext(line.toString());
+                                line.setLength(0);
                             }
                         } else {
-                            line += (char) b;
+                            line.append((char) b);
                         }
                     }
                 } else {
