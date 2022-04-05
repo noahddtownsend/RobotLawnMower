@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn exec:java -Dexec.mainClass=dev.noahtownsend.robotlawnmower.Main
+sudo mvn exec:java -Dexec.mainClass=dev.noahtownsend.robotlawnmower.Main
