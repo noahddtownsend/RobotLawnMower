@@ -72,7 +72,7 @@ public class Main {
 //        gpsService.init();
 
         AtomicBoolean gotDistance = new AtomicBoolean(false);
-        DistanceSensor distanceSensor = new DistanceSensor(context);
+        DistanceSensor distanceSensor = new DistanceSensor(context, 18, 23);
         distanceSensor.measure().subscribe(distanceInCm -> {
             System.out.println("Distance: " + distanceInCm);
             gotDistance.set(true);
