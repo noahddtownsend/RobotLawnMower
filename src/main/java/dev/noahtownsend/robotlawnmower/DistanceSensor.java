@@ -80,6 +80,7 @@ public class DistanceSensor {
 
             start.set(System.currentTimeMillis());
             trigger.low();
+            start.set(System.currentTimeMillis());
 
         });
 
