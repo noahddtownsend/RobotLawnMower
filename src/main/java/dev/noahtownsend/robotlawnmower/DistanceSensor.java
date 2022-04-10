@@ -7,6 +7,8 @@ import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.gpio.digital.PullResistance;
 import io.reactivex.rxjava3.core.Single;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 public class DistanceSensor {
     // m/ms
     private static final double SPEED_OF_SOUND = 0.343;
@@ -56,6 +58,7 @@ public class DistanceSensor {
      */
     public Single<Double> measure() {
         return Single.create(emitter -> {
+            AtomicLong start = new AtomicLong(0);
             trigger.high();
             try {
                 Thread.sleep(500);
@@ -63,12 +66,9 @@ public class DistanceSensor {
                 Thread.currentThread().interrupt();
             }
 
-
-            long start = System.currentTimeMillis();
-
             echo.addListener(digitalStateChangeEvent -> {
                 if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
-                    double distanceInM = (System.currentTimeMillis() - start) * SPEED_OF_SOUND / 2.0;
+                    double distanceInM = (System.currentTimeMillis() - start.get()) * SPEED_OF_SOUND / 2.0;
 
                     if (distanceInM < 0) {
                         distanceInM = Double.MAX_VALUE;
@@ -78,6 +78,7 @@ public class DistanceSensor {
                 }
             });
 
+            start.set(System.currentTimeMillis());
             trigger.low();
 
         });
