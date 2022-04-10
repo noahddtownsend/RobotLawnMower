@@ -67,8 +67,9 @@ public class DistanceSensor {
             }
 
             echo.addListener(digitalStateChangeEvent -> {
+                long currentTime = System.currentTimeMillis();
                 if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
-                    double distanceInM = (System.currentTimeMillis() - start.get()) * SPEED_OF_SOUND / 2.0;
+                    double distanceInM = (currentTime - start.get()) * SPEED_OF_SOUND / 2.0;
 
                     if (distanceInM < 0) {
                         distanceInM = Double.MAX_VALUE;
