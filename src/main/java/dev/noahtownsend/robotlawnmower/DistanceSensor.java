@@ -62,7 +62,7 @@ public class DistanceSensor {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            trigger.low();
+
 
             long start = System.currentTimeMillis();
 
@@ -78,7 +78,7 @@ public class DistanceSensor {
                 }
             });
 
-
+            trigger.low();
 
         });
 
