@@ -45,6 +45,7 @@ public class DistanceSensor {
                         .name("sonic-dist-echo")
                         .address(TRIGGER_PIN)
                         .pull(PullResistance.PULL_UP)
+                        .debounce(100L)
                         .provider("pigpio-digital-input")
         );
     }
@@ -61,7 +62,7 @@ public class DistanceSensor {
 
             echo.addListener(digitalStateChangeEvent -> {
                 System.out.println("Received event");
-                if (digitalStateChangeEvent.state().equals(1)) {
+                if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
                     double distanceInCm = (System.currentTimeMillis() - start) * SPEED_OF_SOUND / 2.0;
 
                     if (distanceInCm < 0) {
