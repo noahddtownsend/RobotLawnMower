@@ -85,7 +85,11 @@ public class DistanceSensor {
             });
 
 
-            Thread.sleep(500);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             trigger.low();
             System.out.println("trigger: " + trigger.state());
 
