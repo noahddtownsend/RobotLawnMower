@@ -57,6 +57,13 @@ public class DistanceSensor {
     public Single<Double> measure() {
         return Single.create(emitter -> {
             trigger.high();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            trigger.low();
+
             long start = System.currentTimeMillis();
 
             echo.addListener(digitalStateChangeEvent -> {
@@ -72,12 +79,7 @@ public class DistanceSensor {
             });
 
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            trigger.low();
+
         });
 
     }
