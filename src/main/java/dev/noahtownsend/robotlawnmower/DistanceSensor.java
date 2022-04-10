@@ -59,7 +59,10 @@ public class DistanceSensor {
      */
     public Single<Double> measure() {
         return Single.create(emitter -> {
+            trigger.high();
+            System.out.println("trigger: " + trigger.state());
             long start = System.currentTimeMillis();
+
             echo.addListener(digitalStateChangeEvent -> {
                 System.out.println("Received event");
                 if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
@@ -81,8 +84,7 @@ public class DistanceSensor {
                 }
             });
 
-            trigger.high();
-            System.out.println("trigger: " + trigger.state());
+
             Thread.sleep(500);
             trigger.low();
             System.out.println("trigger: " + trigger.state());
