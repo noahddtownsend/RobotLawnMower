@@ -43,7 +43,7 @@ public class DistanceSensor {
                 DigitalInput.newConfigBuilder(context)
                         .id("sonic-dist-echo")
                         .name("sonic-dist-echo")
-                        .address(TRIGGER_PIN)
+                        .address(ECHO_PIN)
                         .pull(PullResistance.PULL_UP)
                         .debounce(100L)
                         .provider("pigpio-digital-input")
