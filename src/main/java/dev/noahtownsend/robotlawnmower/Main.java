@@ -73,11 +73,9 @@ public class Main {
 //        GpsService gpsService = new GpsService(pi4j);
 //        gpsService.init();
 
-        AtomicBoolean gotDistance = new AtomicBoolean(false);
         DistanceSensor distanceSensor = new DistanceSensor(context, 18, 23);
-        distanceSensor.measure().subscribeOn(Schedulers.newThread()).subscribe(distanceInCm -> {
-            System.out.println("Distance: " + distanceInCm);
-            gotDistance.set(true);
+        distanceSensor.measure().subscribeOn(Schedulers.newThread()).subscribe(distanceInM -> {
+            System.out.println("Distance: " + distanceInM);
         });
 
         while (pressCount < 5) {
@@ -92,10 +90,6 @@ public class Main {
                 led.high();
             }
             Thread.sleep(5000);
-        }
-
-        while (!gotDistance.get()) {
-
         }
 
         // ------------------------------------------------------------

@@ -1,15 +1,15 @@
 package dev.noahtownsend.robotlawnmower;
 
 import com.pi4j.context.Context;
-import com.pi4j.io.gpio.digital.*;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalState;
+import com.pi4j.io.gpio.digital.PullResistance;
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.core.SingleEmitter;
-import io.reactivex.rxjava3.core.SingleOnSubscribe;
 
 public class DistanceSensor {
-    private static final double SPEED_OF_SOUND = 34300.0;
+    // m/ms
+    private static final double SPEED_OF_SOUND = 0.343;
 
     private int TRIGGER_PIN;
     private int ECHO_PIN;
@@ -48,9 +48,6 @@ public class DistanceSensor {
                         .debounce(1L)
                         .provider("pigpio-digital-input")
         );
-
-        System.out.println("trigger: " + trigger.state());
-        System.out.println("echo: " + echo.state());
     }
 
     /**
@@ -60,27 +57,17 @@ public class DistanceSensor {
     public Single<Double> measure() {
         return Single.create(emitter -> {
             trigger.high();
-            System.out.println("trigger: " + trigger.state());
             long start = System.currentTimeMillis();
 
             echo.addListener(digitalStateChangeEvent -> {
-                System.out.println("Received event");
                 if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
-                    double distanceInCm = (System.currentTimeMillis() - start) * SPEED_OF_SOUND / 2.0;
+                    double distanceInM = (System.currentTimeMillis() - start) * SPEED_OF_SOUND / 2.0;
 
-                    if (distanceInCm < 0) {
-                        distanceInCm = Double.MAX_VALUE;
+                    if (distanceInM < 0) {
+                        distanceInM = Double.MAX_VALUE;
                     }
 
-                    emitter.onSuccess(distanceInCm);
-                } else {
-                    double distanceInCm = (System.currentTimeMillis() - start) * SPEED_OF_SOUND / 2.0;
-
-                    if (distanceInCm < 0) {
-                        distanceInCm = Double.MAX_VALUE;
-                    }
-
-                    emitter.onSuccess(distanceInCm);
+                    emitter.onSuccess(distanceInM);
                 }
             });
 
@@ -91,9 +78,6 @@ public class DistanceSensor {
                 Thread.currentThread().interrupt();
             }
             trigger.low();
-            System.out.println("trigger: " + trigger.state());
-
-
         });
 
     }
