@@ -4,6 +4,8 @@ import com.pi4j.Pi4J;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.util.Console;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -73,7 +75,7 @@ public class Main {
 
         AtomicBoolean gotDistance = new AtomicBoolean(false);
         DistanceSensor distanceSensor = new DistanceSensor(context, 18, 23);
-        distanceSensor.measure().subscribe(distanceInCm -> {
+        distanceSensor.measure().subscribeOn(Schedulers.newThread()).subscribe(distanceInCm -> {
             System.out.println("Distance: " + distanceInCm);
             gotDistance.set(true);
         });

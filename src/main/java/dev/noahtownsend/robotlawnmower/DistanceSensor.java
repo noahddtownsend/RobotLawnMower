@@ -48,6 +48,9 @@ public class DistanceSensor {
                         .debounce(1L)
                         .provider("pigpio-digital-input")
         );
+
+        System.out.println("trigger: " + trigger.state());
+        System.out.println("echo: " + echo.state());
     }
 
     /**
@@ -56,10 +59,7 @@ public class DistanceSensor {
      */
     public Single<Double> measure() {
         return Single.create(emitter -> {
-            trigger.high();
             long start = System.currentTimeMillis();
-            trigger.low();
-
             echo.addListener(digitalStateChangeEvent -> {
                 System.out.println("Received event");
                 if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
@@ -80,6 +80,14 @@ public class DistanceSensor {
                     emitter.onSuccess(distanceInCm);
                 }
             });
+
+            trigger.high();
+            System.out.println("trigger: " + trigger.state());
+            Thread.sleep(500);
+            trigger.low();
+            System.out.println("trigger: " + trigger.state());
+
+
         });
 
     }
