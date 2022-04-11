@@ -5,7 +5,8 @@ import com.pi4j.io.gpio.digital.DigitalInput;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.gpio.digital.PullResistance;
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -13,6 +14,7 @@ public class DistanceSensor {
     // m/ms
     private static final double SPEED_OF_SOUND = 0.343;
 
+    private final AtomicLong TRIGGER_TIME = new AtomicLong(0);
     private int TRIGGER_PIN;
     private int ECHO_PIN;
     private Context context;
@@ -53,12 +55,10 @@ public class DistanceSensor {
     }
 
     /**
-     *
      * @return Single that emits measured distance in CM. If distance in CM is greater than Double.MAX_VALUE, Double.MAX_VALUE is emitted
      */
-    public Single<Double> measure() {
-        return Single.create(emitter -> {
-            AtomicLong start = new AtomicLong(0);
+    public Observable<Double> measure() {
+        return PublishSubject.create(emitter -> {
             trigger.high();
             try {
                 Thread.sleep(500);
@@ -68,7 +68,8 @@ public class DistanceSensor {
 
             echo.addListener(digitalStateChangeEvent -> {
                 long currentTime = System.currentTimeMillis();
-                long elapsedTime = currentTime - start.get();
+                long elapsedTime = currentTime - TRIGGER_TIME.get();
+                trigger();
                 if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
                     System.out.println("Time elapsed (high): " + elapsedTime);
                     double distanceInM = elapsedTime * SPEED_OF_SOUND / 2.0;
@@ -77,7 +78,7 @@ public class DistanceSensor {
                         distanceInM = Double.MAX_VALUE;
                     }
 
-                    emitter.onSuccess(distanceInM);
+                    emitter.onNext(distanceInM);
                 } else {
                     System.out.println("Time elapsed (low): " + elapsedTime);
                     double distanceInM = elapsedTime * SPEED_OF_SOUND / 2.0;
@@ -86,16 +87,22 @@ public class DistanceSensor {
                         distanceInM = Double.MAX_VALUE;
                     }
 
-                    emitter.onSuccess(distanceInM);
+                    emitter.onNext(distanceInM);
                 }
             });
 
-            start.set(System.currentTimeMillis());
+            TRIGGER_TIME.set(System.currentTimeMillis());
             trigger.low();
-            start.set(System.currentTimeMillis());
+            TRIGGER_TIME.set(System.currentTimeMillis());
 
         });
+    }
 
+    private void trigger() {
+        trigger.high();
+        TRIGGER_TIME.set(System.currentTimeMillis());
+        trigger.low();
+        TRIGGER_TIME.set(System.currentTimeMillis());
     }
 
 }
