@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class DistanceSensor {
     // m/ms
     private static final double SPEED_OF_SOUND = 0.343;
+    private static final int TIME_BETWEEN_MEASUREMENTS = 500;
 
     private final AtomicLong TRIGGER_TIME = new AtomicLong(0);
     private int TRIGGER_PIN;
@@ -61,7 +62,7 @@ public class DistanceSensor {
         return PublishSubject.create(emitter -> {
             trigger.high();
             try {
-                Thread.sleep(500);
+                Thread.sleep(TIME_BETWEEN_MEASUREMENTS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -69,9 +70,8 @@ public class DistanceSensor {
             echo.addListener(digitalStateChangeEvent -> {
                 long currentTime = System.currentTimeMillis();
                 long elapsedTime = currentTime - TRIGGER_TIME.get();
-                trigger();
-                if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
-                    System.out.println("Time elapsed (high): " + elapsedTime);
+
+                if (digitalStateChangeEvent.state() == DigitalState.LOW) {
                     double distanceInM = elapsedTime * SPEED_OF_SOUND / 2.0;
 
                     if (distanceInM < 0) {
@@ -79,15 +79,7 @@ public class DistanceSensor {
                     }
 
                     emitter.onNext(distanceInM);
-                } else {
-                    System.out.println("Time elapsed (low): " + elapsedTime);
-                    double distanceInM = elapsedTime * SPEED_OF_SOUND / 2.0;
-
-                    if (distanceInM < 0) {
-                        distanceInM = Double.MAX_VALUE;
-                    }
-
-                    emitter.onNext(distanceInM);
+                    trigger();
                 }
             });
 
@@ -101,7 +93,7 @@ public class DistanceSensor {
     private void trigger() {
         trigger.high();
         try {
-            Thread.sleep(500);
+            Thread.sleep(TIME_BETWEEN_MEASUREMENTS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
