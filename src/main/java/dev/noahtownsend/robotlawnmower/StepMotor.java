@@ -39,6 +39,25 @@ public class StepMotor {
                         .initial(DigitalState.LOW)
                         .provider("pigpio-digital-output")
         );
+
+        context.create(
+                DigitalOutput.newConfigBuilder(context)
+                        .id(id2 + 1)
+                        .name(id2 + 1)
+                        .address(22)
+                        .shutdown(DigitalState.LOW)
+                        .initial(DigitalState.LOW)
+                        .provider("pigpio-digital-output")
+        );
+        context.create(
+                DigitalOutput.newConfigBuilder(context)
+                        .id(id2 + 7)
+                        .name(id2 + 7)
+                        .address(27)
+                        .shutdown(DigitalState.LOW)
+                        .initial(DigitalState.LOW)
+                        .provider("pigpio-digital-output")
+        );
     }
 
     public void setStepLevel(StepLevel stepLevel) {
