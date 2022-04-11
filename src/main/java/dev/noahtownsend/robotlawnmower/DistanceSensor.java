@@ -69,6 +69,7 @@ public class DistanceSensor {
             echo.addListener(digitalStateChangeEvent -> {
                 long currentTime = System.currentTimeMillis();
                 if (digitalStateChangeEvent.state() == DigitalState.HIGH) {
+                    System.out.println("Time elapsed: " + (currentTime - start.get()));
                     double distanceInM = (currentTime - start.get()) * SPEED_OF_SOUND / 2.0;
 
                     if (distanceInM < 0) {
