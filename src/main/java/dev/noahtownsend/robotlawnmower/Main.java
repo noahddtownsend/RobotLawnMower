@@ -73,18 +73,23 @@ public class Main {
 //        GpsService gpsService = new GpsService(pi4j);
 //        gpsService.init();
 
-        DistanceSensor distanceSensor = new DistanceSensor(context, 18, 23);
-        distanceSensor.measure().subscribeOn(Schedulers.newThread()).subscribe(distanceInM -> {
-            System.out.println("Distance: " + distanceInM);
-        });
+//        DistanceSensor distanceSensor = new DistanceSensor(context, 18, 23);
+//        distanceSensor.measure().subscribeOn(Schedulers.newThread()).subscribe(distanceInM -> {
+//            System.out.println("Distance: " + distanceInM);
+//        });
+
+        StepMotor stepMotor = new StepMotor(context, 23, 24);
+
 
         while (pressCount < 5) {
             ++pressCount;
             if (led.equals(DigitalState.HIGH)) {
+                stepMotor.setStepLevel(StepMotor.StepLevel.OFF);
                 System.out.println("LED low");
                 console.println("LED low");
                 led.low();
             } else {
+                stepMotor.setStepLevel(StepMotor.StepLevel.HIGH);
                 System.out.println("LED high");
                 console.println("LED high");
                 led.high();
