@@ -46,7 +46,7 @@ public class DistanceSensor {
                         .id("sonic-dist-echo")
                         .name("sonic-dist-echo")
                         .address(ECHO_PIN)
-                        .pull(PullResistance.PULL_UP)
+                        .pull(PullResistance.PULL_DOWN)
                         .debounce(1L)
                         .provider("pigpio-digital-input")
         );
