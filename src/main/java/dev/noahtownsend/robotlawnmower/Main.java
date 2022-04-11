@@ -76,6 +76,9 @@ public class Main {
         DistanceSensor distanceSensor = new DistanceSensor(context, 18, 23);
         distanceSensor.measure().subscribeOn(Schedulers.newThread()).subscribe(distanceInM -> {
             System.out.println("Distance: " + distanceInM);
+            distanceSensor.measure().subscribe(distanceInM2 -> {
+                System.out.println("Distance: " + distanceInM2);
+            });
         });
 
         while (pressCount < 5) {
