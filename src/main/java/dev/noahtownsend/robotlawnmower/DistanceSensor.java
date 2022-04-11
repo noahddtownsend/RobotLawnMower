@@ -100,6 +100,11 @@ public class DistanceSensor {
 
     private void trigger() {
         trigger.high();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         TRIGGER_TIME.set(System.currentTimeMillis());
         trigger.low();
         TRIGGER_TIME.set(System.currentTimeMillis());
